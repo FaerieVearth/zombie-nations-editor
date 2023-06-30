@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    {{ this.wavesPlan[selectedLevel] }}
     <div class="waves-editor-container" :key="renderKey">
       <div class="level-selection">
         <div class="import-export">
@@ -38,7 +39,7 @@
       </div>
       <template v-for="(value, levelName, index) in wavesPlan">
         <EditableTable v-if="levelName === selectedLevel" v-bind:key="index + levelName" v-model="wavesPlan[levelName]"
-          :fields="fields" :levelIndex="levelName"></EditableTable>
+          :fields="fields" :levelIndex="index"></EditableTable>
       </template>
       <WavePlayer :waves="wavesPlan[selectedLevel]"></WavePlayer>
     </div>
@@ -102,7 +103,24 @@ export default {
       return zombieCount;
     },
     duplicateLevel(wave) {
-      this.wavesPlan.splice(wave, 0, this.wavesPlan[wave]);
+      /*
+      newObject = this.wavesPlan.splice(wave, 0, this.wavesPlan[wave]);
+      this.selectedLevel = wave + 1;
+      */
+      let newKey = 0;
+      const newObject = [];
+      for (let i = 0; i < this.wavesPlan.length; i++) {
+        console.log("put into index ", newKey, "from index ", i);
+        newObject[newKey] = JSON.parse(JSON.stringify(this.wavesPlan[i]));
+        if (i === wave) {
+          newKey++;
+          console.log("put into index ", newKey, "from index ", i);
+          newObject[newKey] = JSON.parse(JSON.stringify(this.wavesPlan[i]));
+        }
+        newKey++;
+      }
+      console.log(this.wavesPlan, newObject);
+      this.wavesPlan = newObject;
       this.selectedLevel = wave + 1;
     },
     async importFile() {
@@ -118,7 +136,7 @@ export default {
     async exportFile() {
       const handle = await window.showSaveFilePicker();
       const writable = await handle.createWritable();
-      let st = this.myReplace(this.originalText,  this.formatReplacementWave(this.wavesPlan));
+      let st = this.myReplace(this.originalText, this.formatReplacementWave(this.wavesPlan));
       await writable.write(st);
       await writable.close();
     },
@@ -145,7 +163,7 @@ export default {
     formatReplacementWave(replacementWave) {
       let tmp = "";
       tmp += ' [\n';
-      for(let i = 0; i< replacementWave.length; i++) {
+      for (let i = 0; i < replacementWave.length; i++) {
         if (i == replacementWave.length - 1) {
           tmp += '        ' + JSON.stringify(replacementWave[i]) + '\n';
         } else {

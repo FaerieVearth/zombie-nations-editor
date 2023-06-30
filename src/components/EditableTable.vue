@@ -1,7 +1,7 @@
 <template>
   <div class="waves-section">
     <div class="level-display">
-      <h1>Level: {{ selectedLevel }}</h1>
+      <h1>Level: {{ getLevelName(selectedLevel) }}</h1>
       <h4>Enemies: {{ getNumberOfZombies() }}</h4>
     </div>
     <div class="draggable-container">
@@ -135,10 +135,13 @@ export default {
     return {
       tableItems: this.value,
       handleToggle: false,
-      selectedLevel: this.levelIndex + 1,
+      selectedLevel: this.levelIndex
     };
   },
   methods: {
+    getLevelName(level) {
+      return level + 1;
+    },
     getNumberOfZombies() {
       let zombieCount = 0;
       for (let i = 0; i < this.tableItems.length; i++) {
