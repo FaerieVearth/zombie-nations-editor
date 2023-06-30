@@ -147,7 +147,6 @@ export default {
       return zombieCount;
     },
     setHandleToggle(x) {
-      console.log("handle toggle: ", x);
       this.handleToggle = x;
     },
     checkMove() {

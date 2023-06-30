@@ -145,7 +145,6 @@ export default {
     formatReplacementWave(replacementWave) {
       let tmp = "";
       tmp += ' [\n';
-      console.log(replacementWave.length);
       for(let i = 0; i< replacementWave.length; i++) {
         if (i == replacementWave.length - 1) {
           tmp += '        ' + JSON.stringify(replacementWave[i]) + '\n';
