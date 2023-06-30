@@ -118,7 +118,7 @@ export default {
     async exportFile() {
       const handle = await window.showSaveFilePicker();
       const writable = await handle.createWritable();
-      let st = this.myReplace(this.originalText,  '[' + JSON.stringify(this.wavesPlan) + ']');
+      let st = this.myReplace(this.originalText,  this.formatReplacementWave(this.wavesPlan));
       await writable.write(st);
       await writable.close();
     },
@@ -128,7 +128,7 @@ export default {
       selBox.style.left = "0";
       selBox.style.top = "0";
       selBox.style.opacity = "0";
-      let st = this.myReplace(this.originalText, '[' + JSON.stringify(this.wavesPlan) + ']');
+      let st = this.myReplace(this.originalText, this.formatReplacementWave(this.wavesPlan));
       selBox.value = st;
       document.body.appendChild(selBox);
       selBox.focus();
@@ -140,9 +140,22 @@ export default {
     myReplace(string, replacement) {
       replacement = replacement.substring(1, replacement.length - 1);
       var result = string.match(/(?<="waves_v2": ).*?(?=,\s+"settings")/gs);
-      console.log(result, replacement);
       return string.replace(result, replacement);
     },
+    formatReplacementWave(replacementWave) {
+      let tmp = "";
+      tmp += ' [\n';
+      console.log(replacementWave.length);
+      for(let i = 0; i< replacementWave.length; i++) {
+        if (i == replacementWave.length - 1) {
+          tmp += '        ' + JSON.stringify(replacementWave[i]) + '\n';
+        } else {
+          tmp += '        ' + JSON.stringify(replacementWave[i]) + ',\n';
+        }
+      }
+      tmp += '    ],';
+      return tmp;
+    }
   },
 };
 </script>
